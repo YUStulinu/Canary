@@ -59,7 +59,7 @@ class Detector:
     def __init__(self, source: str, dataset: str, ch: ClickHouse, idle: float, gap: float, device: str):
         self.source, self.dataset, self.ch, self.idle, self.gap = source, dataset, ch, idle, gap
         self.drain = Drain.load(ROOT / "models" / f"drain-{dataset}.json")
-        ck = torch.load(ROOT / "models" / f"deeplog-{dataset}.pt", weights_only=False)
+        ck = torch.load(ROOT / "models" / f"deeplog-{dataset}.pt", map_location="cpu", weights_only=False)
         self.model = DeepLog(ck["templates"], ck["window"])
         self.model.load_state_dict(ck["state"])
         self.model.to(device)

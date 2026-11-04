@@ -81,7 +81,8 @@ def main() -> None:
     for model, r in out["models"].items():
         print(f"  {model}: P {r['precision']} R {r['recall']} F1 {r['f1']}", flush=True)
     (ROOT / "models").mkdir(exist_ok=True)
-    torch.save({"state": deeplog.state_dict(), "templates": known, "window": deeplog.window, "top_k": best_k,
+    # Saved on the CPU, so the model loads on machines without a GPU.
+    torch.save({"state": {k: v.cpu() for k, v in deeplog.state_dict().items()}, "templates": known, "window": deeplog.window, "top_k": best_k,
                 "misses_to_flag": int(best_t)},
                ROOT / "models" / f"deeplog-{name}.pt")
     (ROOT / "results").mkdir(exist_ok=True)

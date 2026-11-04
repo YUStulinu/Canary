@@ -75,3 +75,15 @@ def test_deeplog_learns_a_normal_sequence_and_flags_a_deviation():
     test = Sessions(np.array([0, 12, 20]), np.concatenate([normal[0], odd]), np.array([False, True]), np.zeros(2))
     misses = model.misses(test, [1], "cpu")[1]
     assert misses[0] == 0 and misses[1] >= 2
+
+
+def test_shipped_models_load_on_a_cpu():
+    # Models saved from a GPU would not load on a machine without CUDA.
+    root = Path(__file__).resolve().parents[2] / "models"
+    for name in ("HDFS", "BGL"):
+        ck = torch.load(root / f"deeplog-{name}.pt", map_location="cpu", weights_only=False)
+        model = DeepLog(ck["templates"], ck["window"])
+        model.load_state_dict(ck["state"])
+        assert {t.device.type for t in ck["state"].values()} == {"cpu"}
+        assert ck["top_k"] >= 1 and ck["misses_to_flag"] >= 1
+        assert Drain.load(root / f"drain-{name}.json").groups

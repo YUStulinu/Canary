@@ -29,7 +29,7 @@ def main() -> None:
     test = data.subset(te)
     test_keys = keys[te]
 
-    ck = torch.load(ROOT / "models" / "deeplog-HDFS.pt", weights_only=False)
+    ck = torch.load(ROOT / "models" / "deeplog-HDFS.pt", map_location="cpu", weights_only=False)
     model = DeepLog(ck["templates"], ck["window"])
     model.load_state_dict(ck["state"])
     device = "cuda" if torch.cuda.is_available() else "cpu"

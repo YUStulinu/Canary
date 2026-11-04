@@ -99,15 +99,4 @@ jobs:
           (cd collector && go build -o ../bin/ ./cmd/...)
           pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cpu
           pip install numpy==2.5.4 scikit-learn==1.8.0 httpx==0.28.1
-      - name: Ship, store and detect
-        run: |
-          curl -fsSL -o hdfs2k.log https://raw.githubusercontent.com/logpai/loghub/master/HDFS/HDFS_2k.log
-          bin/collector &
-          sleep 2
-          agent/target/release/canary-agent --file hdfs2k.log --format hdfs --source hdfs
-          sleep 2
-          n=$(curl -s -u canary:canary "http://127.0.0.1:8124/?database=canary" --data-binary "SELECT count() FROM logs")
-          echo "stored $n lines"; test "$n" = "2000"
-          (cd detector && python -m canary.live --source hdfs --dataset HDFS)
-          s=$(curl -s -u canary:canary "http://127.0.0.1:8124/?database=canary" --data-binary "SELECT count() FROM scored_sessions")
-          echo "scored $s sessions"; test "$s" -gt 0
+      - run: bash scripts/ci-integration.sh

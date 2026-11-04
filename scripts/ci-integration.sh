@@ -4,10 +4,11 @@
 # signing in.
 set -uo pipefail
 log=integration.log
+exec 3>&1  # the job's own output, for the annotation (stdout is redirected to the log below)
 report() {
   local tail
   tail=$(tail -n 40 "$log" | sed ':a;N;$!ba;s/%/%25/g;s/\r//g;s/\n/%0A/g')
-  echo "::error title=integration failed::${tail}"
+  echo "::error title=integration failed::${tail}" >&3
   exit 1
 }
 trap report ERR

@@ -1,0 +1,16 @@
+{
+  "HDFS": {
+    "lines": 2000,
+    "true_templates": 14,
+    "templates_found": 17,
+    "grouping_accuracy": 0.9975,
+    "lines_per_second": 123015
+  },
+  "BGL": {
+    "lines": 2000,
+    "true_templates": 120,
+    "templates_found": 109,
+    "grouping_accuracy": 0.964,
+    "lines_per_second": 212731
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/detector/.venv/Scripts/python.exe",
+  "python.testing.pytestEnabled": true,
+  "python.testing.cwd": "${workspaceFolder}/detector",
+  "rust-analyzer.linkedProjects": ["agent/Cargo.toml"],
+  "search.exclude": { "data": true, "third_party": true, "agent/target": true, "**/node_modules": true, "dashboard/dist": true }
+}

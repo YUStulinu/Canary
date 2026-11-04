@@ -1,0 +1,7 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    { "name": "collector", "type": "go", "request": "launch", "program": "${workspaceFolder}/collector/cmd/collector" },
+    { "name": "live detector (hdfs)", "type": "debugpy", "request": "launch", "module": "canary.live", "args": ["--source", "hdfs", "--dataset", "HDFS"], "cwd": "${workspaceFolder}/detector" }
+  ]
+}

@@ -1,0 +1,84 @@
+[
+ {
+  "format": "HDFS",
+  "line": "081109 203518 143 INFO dfs.DataNode$DataXceiver: Receiving block blk_-1608999687919862906 src: /10.250.19.102:54106 dest: /10.250.19.102:50010",
+  "parsed": {
+   "timestamp": 1226262918.0,
+   "level": "INFO",
+   "component": "dfs.DataNode$DataXceiver",
+   "session": "blk_-1608999687919862906",
+   "message": "Receiving block blk_-1608999687919862906 src: /10.250.19.102:54106 dest: /10.250.19.102:50010",
+   "label": ""
+  }
+ },
+ {
+  "format": "HDFS",
+  "line": "081109 203519 35 INFO dfs.FSNamesystem: BLOCK* NameSystem.addStoredBlock: blockMap updated: 10.251.73.220:50010 is added to blk_7128370237687728475 size 67108864",
+  "parsed": {
+   "timestamp": 1226262919.0,
+   "level": "INFO",
+   "component": "dfs.FSNamesystem",
+   "session": "blk_7128370237687728475",
+   "message": "BLOCK* NameSystem.addStoredBlock: blockMap updated: 10.251.73.220:50010 is added to blk_7128370237687728475 size 67108864",
+   "label": ""
+  }
+ },
+ {
+  "format": "HDFS",
+  "line": "081111 101621 24 WARN dfs.DataNode$DataTransfer: 10.251.39.209:50010:Failed to transfer blk_-8076545025097880616 to 10.251.199.86:50010 got java.io.IOException: Connection reset by peer",
+  "parsed": {
+   "timestamp": 1226398581.0,
+   "level": "WARN",
+   "component": "dfs.DataNode$DataTransfer",
+   "session": "blk_-8076545025097880616",
+   "message": "10.251.39.209:50010:Failed to transfer blk_-8076545025097880616 to 10.251.199.86:50010 got java.io.IOException: Connection reset by peer",
+   "label": ""
+  }
+ },
+ {
+  "format": "HDFS",
+  "line": "not a log line",
+  "parsed": null
+ },
+ {
+  "format": "BGL",
+  "line": "- 1117838570 2005.06.03 R02-M1-N0-C:J12-U11 2005-06-03-15.42.50.675872 R02-M1-N0-C:J12-U11 RAS KERNEL INFO instruction cache parity error corrected",
+  "parsed": {
+   "timestamp": 1117838570.675872,
+   "level": "INFO",
+   "component": "KERNEL",
+   "session": "R02-M1-N0-C:J12-U11",
+   "message": "instruction cache parity error corrected",
+   "label": "-"
+  }
+ },
+ {
+  "format": "BGL",
+  "line": "APPREAD 1117869872 2005.06.04 R04-M1-N4-I:J18-U11 2005-06-04-00.24.32.432192 R04-M1-N4-I:J18-U11 RAS APP FATAL ciod: failed to read message prefix on control stream (CioStream socket to 172.16.96.116:33569",
+  "parsed": {
+   "timestamp": 1117869872.432192,
+   "level": "FATAL",
+   "component": "APP",
+   "session": "R04-M1-N4-I:J18-U11",
+   "message": "ciod: failed to read message prefix on control stream (CioStream socket to 172.16.96.116:33569",
+   "label": "APPREAD"
+  }
+ },
+ {
+  "format": "BGL",
+  "line": "- 1118536327 2005.06.11 NULL 2005-06-11-17.32.07.581048 NULL RAS MMCS ERROR idoproxydb hit ASSERT condition: ASSERT expression=0",
+  "parsed": {
+   "timestamp": 1118536327.581048,
+   "level": "ERROR",
+   "component": "MMCS",
+   "session": "NULL",
+   "message": "idoproxydb hit ASSERT condition: ASSERT expression=0",
+   "label": "-"
+  }
+ },
+ {
+  "format": "BGL",
+  "line": "short line",
+  "parsed": null
+ }
+]

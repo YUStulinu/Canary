@@ -1,0 +1,44 @@
+{
+  "sessions": 575061,
+  "templates": 48,
+  "split": {
+    "train": 391041,
+    "valid": 69007,
+    "test": 115013,
+    "anomalous_share": {
+      "train": 0.0329,
+      "test": 0.0146
+    }
+  },
+  "models": {
+    "Isolation Forest (unsupervised; threshold from validation)": {
+      "precision": 0.339,
+      "recall": 0.818,
+      "f1": 0.48,
+      "tp": 1373,
+      "fp": 2673,
+      "fn": 306,
+      "seconds": 2
+    },
+    "DeepLog LSTM (trained on normal sessions; top-k from validation)": {
+      "precision": 0.637,
+      "recall": 0.66,
+      "f1": 0.648,
+      "tp": 1108,
+      "fp": 632,
+      "fn": 571,
+      "top_k": 5,
+      "misses_to_flag": 1,
+      "seconds": 95
+    },
+    "Logistic regression (supervised reference)": {
+      "precision": 0.999,
+      "recall": 0.939,
+      "f1": 0.968,
+      "tp": 1577,
+      "fp": 2,
+      "fn": 102,
+      "seconds": 1
+    }
+  }
+}

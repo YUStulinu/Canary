@@ -1,0 +1,22 @@
+# ClickHouse for Canary; the schema is created on first start.
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:26.10.3.7
+    environment:
+      CLICKHOUSE_DB: canary
+      CLICKHOUSE_USER: canary
+      CLICKHOUSE_PASSWORD: canary
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    ports:
+      - "127.0.0.1:8124:8123"
+    volumes:
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/10-schema.sql:ro
+      - canary-data:/var/lib/clickhouse
+    ulimits:
+      nofile: { soft: 262144, hard: 262144 }
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--user", "canary", "--password", "canary", "--query", "SELECT 1"]
+      interval: 2s
+      retries: 30
+volumes:
+  canary-data:

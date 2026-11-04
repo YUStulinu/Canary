@@ -1,0 +1,12 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "start ClickHouse", "type": "shell", "command": "docker compose up -d --wait", "problemMatcher": [] },
+    { "label": "collector", "type": "shell", "command": "go run ./cmd/collector", "options": { "cwd": "${workspaceFolder}/collector" }, "isBackground": true, "problemMatcher": [] },
+    { "label": "dashboard", "type": "shell", "command": "npm run build && npm start", "options": { "cwd": "${workspaceFolder}/dashboard" }, "isBackground": true, "problemMatcher": [] },
+    { "label": "Rust tests", "type": "shell", "command": "cargo test --release", "options": { "cwd": "${workspaceFolder}/agent" }, "group": "test", "problemMatcher": [] },
+    { "label": "Go tests", "type": "shell", "command": "go test ./...", "options": { "cwd": "${workspaceFolder}/collector" }, "group": "test", "problemMatcher": [] },
+    { "label": "Python tests", "type": "shell", "command": ".venv/Scripts/python -m pytest -q", "options": { "cwd": "${workspaceFolder}/detector" }, "group": "test", "problemMatcher": [] },
+    { "label": "dashboard tests", "type": "shell", "command": "npx vitest run", "options": { "cwd": "${workspaceFolder}/dashboard" }, "group": "test", "problemMatcher": [] }
+  ]
+}

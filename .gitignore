@@ -1,0 +1,10 @@
+data/
+third_party/
+bin/
+agent/target/
+detector/.venv/
+**/__pycache__/
+.pytest_cache/
+dashboard/node_modules/
+dashboard/dist/
+*.canary-offset

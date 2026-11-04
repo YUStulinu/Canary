@@ -1,0 +1,9 @@
+{
+  "incidents_summarised": 299,
+  "incidents_with_both_kinds_of_line": 76,
+  "answers_citing_no_line": 4,
+  "evidence_precision": 0.656,
+  "baseline_random_citation": 0.48,
+  "evidence_recall": 0.936,
+  "lines_cited": 625
+}

@@ -1,0 +1,113 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  agent:
+    # Parsing (the same fixture as the Python parser), following growing and rotated files,
+    # retrying batches the collector refuses.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: agent
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: agent
+      - run: cargo test --release
+
+  collector:
+    # The all-or-nothing queue, ordered writes after a failure, backpressure when the database stalls.
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: collector
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: collector/go.mod
+      - run: go vet ./...
+      - run: go test -race ./...
+
+  detector:
+    # Drain, the parser, the split, DeepLog on a toy sequence.
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: detector
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - run: |
+          pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cpu
+          pip install numpy==2.5.4 scikit-learn==1.8.0 httpx==0.28.1 pytest==9.2.0
+          python -m pytest -q
+
+  dashboard:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+      - run: npm ci
+      - run: npx vitest run
+      - run: npm run build
+
+  integration:
+    # The whole path on LogHub's 2,000-line HDFS sample: agent -> collector -> ClickHouse -> live
+    # detector, with the trained models from models/.
+    runs-on: ubuntu-latest
+    services:
+      clickhouse:
+        image: clickhouse/clickhouse-server:26.10.3.7
+        env:
+          CLICKHOUSE_USER: canary
+          CLICKHOUSE_PASSWORD: canary
+          CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+        ports:
+          - 8124:8123
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: collector/go.mod
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - run: python scripts/apply_schema.py
+      - name: Build
+        run: |
+          (cd agent && cargo build --release)
+          (cd collector && go build -o ../bin/ ./cmd/...)
+          pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cpu
+          pip install numpy==2.5.4 scikit-learn==1.8.0 httpx==0.28.1
+      - name: Ship, store and detect
+        run: |
+          curl -fsSL -o hdfs2k.log https://raw.githubusercontent.com/logpai/loghub/master/HDFS/HDFS_2k.log
+          bin/collector &
+          sleep 2
+          agent/target/release/canary-agent --file hdfs2k.log --format hdfs --source hdfs
+          sleep 2
+          n=$(curl -s -u canary:canary "http://127.0.0.1:8124/?database=canary" --data-binary "SELECT count() FROM logs")
+          echo "stored $n lines"; test "$n" = "2000"
+          (cd detector && python -m canary.live --source hdfs --dataset HDFS)
+          s=$(curl -s -u canary:canary "http://127.0.0.1:8124/?database=canary" --data-binary "SELECT count() FROM scored_sessions")
+          echo "scored $s sessions"; test "$s" -gt 0
